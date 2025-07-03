@@ -4,7 +4,8 @@ const config = queryParams.get('config');
 document.getElementById("config").innerText = config;
 
 //const socket = io('https://kispi-socket-io-server.fly.dev/', {
-const socket = io('https://kispi-socket-io-server-dev.fly.dev/', {    
+//const socket = io('https://kispi-socket-io-server-dev.fly.dev/', {
+const socket = io('http://localhost:3001/', {    
     query: {
         token: 'my-auth-token',
         custom: 'goat',
@@ -29,6 +30,21 @@ socket.on('chat message', (msg) => {
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
 });
+
+socket.on('message', (msg) => {
+
+    console.log(msg);
+
+    try {
+        const data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+
+        console.log("Nachricht empfangen:");
+        console.log("MessageType:", data.MessageType);
+        console.log("Message:", data.Message);
+    } catch (err) {
+        console.error("Fehler beim Parsen der Nachricht:", err);
+    }
+})
 
 socket.on('client connected', (clientId) => {
     console.log("client connected with id: " + clientId);
